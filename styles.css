@@ -31,7 +31,7 @@ body {
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
     z-index: -1;
     background-image: linear-gradient(rgba(26, 11, 46, 0.2), rgba(45, 27, 78, 0.2)), url('singapore_background.png');
     background-size: cover;
