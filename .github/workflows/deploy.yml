@@ -1,0 +1,48 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Inject Environment Variables
+        run: |
+          echo "window.ENV = {" > env.js
+          echo "  PORT: '${{ secrets.PORT }}'," >> env.js
+          echo "  NODE_ENV: '${{ secrets.NODE_ENV }}'," >> env.js
+          echo "  DATABASE_URL: '${{ secrets.DATABASE_URL }}'," >> env.js
+          echo "  API_KEY: '${{ secrets.API_KEY }}'," >> env.js
+          echo "  SECRET_KEY: '${{ secrets.SECRET_KEY }}'," >> env.js
+          echo "  SCRIPT_URL: '${{ secrets.SCRIPT_URL }}'" >> env.js
+          echo "};" >> env.js
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

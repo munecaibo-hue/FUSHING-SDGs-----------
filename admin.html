@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GM 操作介面 - 復興實中機智問答</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-animation"></div>
+    <div class="container">
+        <header>
+            <div class="header-titles">
+                <h1 id="admin-title">GM 登入</h1>
+                <h2>復興實中 新加坡交流</h2>
+            </div>
+            <div class="controls">
+                <a href="index.html" class="btn btn-outline">返回首頁</a>
+            </div>
+        </header>
+
+        <div id="login-section" class="top-teams" style="max-width: 400px; margin: 0 auto; padding: 3rem 2rem;">
+            <h3>請輸入 GM 密碼</h3>
+            <input type="password" id="gm-password" class="gm-input" placeholder="請輸入密碼">
+            <button id="login-btn" class="btn btn-add" style="margin-top: 1.5rem;">登入</button>
+            <p id="login-error" style="color: var(--accent-red); margin-top: 1rem; text-align: center; display: none;">密碼錯誤</p>
+        </div>
+
+        <div id="admin-section" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h3 id="admin-class-title" class="class-title"></h3>
+                <button id="reset-btn" class="btn btn-outline" style="border-color: var(--accent-red); color: var(--accent-red);">重設此班級分數</button>
+            </div>
+            <div id="admin-teams" class="teams-grid">
+                <!-- Teams injected here -->
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

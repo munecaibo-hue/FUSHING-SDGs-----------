@@ -1,0 +1,10 @@
+{
+    "workbench.editor.autoLockGroups": {
+        "default": true,
+        "workbench.editor.chatSession": true,
+        "workbench.editorinputs.searchEditorInput": true,
+        "workbench.editors.gettingStartedInput": true,
+        "antigravity.globalArtifactsEditorInput": true,
+        "imagePreview.previewEditor": true
+    }
+}

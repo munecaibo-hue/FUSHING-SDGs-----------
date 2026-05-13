@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>復興實中-新加坡交流 機智問答計分板</title>
+    <link rel="stylesheet" href="styles.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+TC:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    </head<script src="env.js">
+    </script>>
+
+<body>
+    <div class="background-animation"></div>
+    <div class="container">
+        <header>
+            <div class="header-titles">
+                <h1 style="display: flex; align-items: center; justify-content: center; gap: 10px;"><img
+                        src="復興logo--去背.png" alt="復興校徽" style="height: 1em; width: auto;">復興實中 新加坡交流</h1>
+                <h2>SDGs 機智問答計分板</h2>
+            </div>
+            <div class="controls">
+                <a href="admin.html" class="btn btn-outline">GM 登入</a>
+            </div>
+        </header>
+
+        <section class="top-teams">
+            <h3>🏆 優勝前四名 🏆</h3>
+            <div id="podium" class="podium-container">
+                <!-- Top 4 teams will be injected here dynamically -->
+            </div>
+        </section>
+
+        <div class="teams-container" style="gap: 1.5rem;">
+            <h3 class="class-title" style="margin-bottom: 0;">所有隊伍排行榜</h3>
+            <div id="all-teams-grid" class="teams-grid"
+                style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));">
+                <!-- All teams ranked, without buttons -->
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
