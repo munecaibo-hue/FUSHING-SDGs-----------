@@ -278,5 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-console.log(window.ENV.SCRIPT_URL);
-console.log(window.ENV.API_KEY);
+if (typeof window !== 'undefined' && window.ENV) {
+    console.log(window.ENV.SCRIPT_URL);
+    console.log(window.ENV.API_KEY);
+}
