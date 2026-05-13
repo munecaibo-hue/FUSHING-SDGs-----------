@@ -6,6 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load scores from localStorage or initialize
     let teams = JSON.parse(localStorage.getItem('sgTriviaScores')) || [];
     
+    // Cloud URL from env.js
+    const scriptUrl = typeof window !== 'undefined' && window.ENV ? window.ENV.SCRIPT_URL : '';
+
     if (teams.length === 0) {
         for (let i = 1; i <= heClassCount; i++) {
             teams.push({ id: `he-${i}`, name: `和班 第${i}小隊`, class: 'he', score: 0 });
@@ -16,8 +19,32 @@ document.addEventListener('DOMContentLoaded', () => {
         saveScores();
     }
 
+    // Initial fetch from cloud
+    if (scriptUrl) {
+        fetch(scriptUrl)
+            .then(res => res.json())
+            .then(cloudTeams => {
+                if (cloudTeams && Array.isArray(cloudTeams) && cloudTeams.length > 0) {
+                    teams = cloudTeams;
+                    localStorage.setItem('sgTriviaScores', JSON.stringify(teams));
+                    // Dispatch custom event to trigger re-renders
+                    window.dispatchEvent(new Event('scoresUpdated'));
+                }
+            })
+            .catch(err => console.error('Initial fetch error:', err));
+    }
+
     function saveScores() {
         localStorage.setItem('sgTriviaScores', JSON.stringify(teams));
+        
+        // Sync to cloud
+        if (scriptUrl) {
+            fetch(scriptUrl, {
+                method: 'POST',
+                body: JSON.stringify(teams),
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+            }).catch(err => console.error('Sync error:', err));
+        }
     }
 
     function addScore(teamId, points) {
@@ -99,14 +126,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         renderPublic();
-        // Optional: auto-refresh public page every 2 seconds if opened on another screen
-        setInterval(() => {
-            const freshTeams = JSON.parse(localStorage.getItem('sgTriviaScores'));
-            if (freshTeams && JSON.stringify(freshTeams) !== JSON.stringify(teams)) {
-                teams = freshTeams;
-                renderPublic();
+        
+        // Listen to cloud updates initialized on load
+        window.addEventListener('scoresUpdated', renderPublic);
+
+        // Auto-refresh public page periodically
+        setInterval(async () => {
+            if (scriptUrl) {
+                try {
+                    const res = await fetch(scriptUrl);
+                    const cloudTeams = await res.json();
+                    if (cloudTeams && Array.isArray(cloudTeams) && JSON.stringify(cloudTeams) !== JSON.stringify(teams)) {
+                        teams = cloudTeams;
+                        localStorage.setItem('sgTriviaScores', JSON.stringify(teams));
+                        renderPublic();
+                    }
+                } catch (e) {
+                    console.error('Fetch error:', e);
+                }
+            } else {
+                const freshTeams = JSON.parse(localStorage.getItem('sgTriviaScores'));
+                if (freshTeams && JSON.stringify(freshTeams) !== JSON.stringify(teams)) {
+                    teams = freshTeams;
+                    renderPublic();
+                }
             }
-        }, 2000);
+        }, 3000);
     }
 
     // ========== ADMIN LOGIC ==========
@@ -188,4 +233,10 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.addEventListener('click', (e) => addScore(e.target.getAttribute('data-id'), -2));
         });
     }
+
+    window.addEventListener('scoresUpdated', () => {
+        if (adminSection && adminSection.style.display !== 'none') {
+            renderAdminTeams();
+        }
+    });
 });
