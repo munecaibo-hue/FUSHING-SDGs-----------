@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function saveScores() {
         localStorage.setItem('sgTriviaScores', JSON.stringify(teams));
 
-        // Sync to cloud
+        // Sync to cloud (only used for full sync if needed)
         if (scriptUrl) {
             try {
                 const url = new URL(scriptUrl);
@@ -50,12 +50,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function addScore(teamId, points) {
+    async function addScore(teamId, points) {
         const team = teams.find(t => t.id === teamId);
         if (team) {
             team.score += points;
-            saveScores();
-            renderAdminTeams();
+            localStorage.setItem('sgTriviaScores', JSON.stringify(teams));
+            if (typeof renderAdminTeams === 'function') renderAdminTeams();
+
+            if (scriptUrl) {
+                try {
+                    const url = new URL(scriptUrl);
+                    url.searchParams.append('action', 'updateScore');
+                    url.searchParams.append('teamId', teamId);
+                    url.searchParams.append('points', points.toString());
+                    const res = await fetch(url.toString());
+                    const result = await res.json();
+                    if (result && result.data) {
+                        teams = result.data;
+                        localStorage.setItem('sgTriviaScores', JSON.stringify(teams));
+                        if (typeof renderAdminTeams === 'function') renderAdminTeams();
+                    }
+                } catch (e) {
+                    console.error('Update score error:', e);
+                }
+            }
         }
     }
 
@@ -199,13 +217,30 @@ document.addEventListener('DOMContentLoaded', () => {
             renderAdminTeams();
         }
 
-        resetBtn.addEventListener('click', () => {
+        resetBtn.addEventListener('click', async () => {
             if (confirm(`確定要重設 ${currentAdminClass === 'he' ? '和班' : '平班'} 的所有分數嗎？`)) {
                 teams.forEach(t => {
                     if (t.class === currentAdminClass) t.score = 0;
                 });
-                saveScores();
+                localStorage.setItem('sgTriviaScores', JSON.stringify(teams));
                 renderAdminTeams();
+                
+                if (scriptUrl) {
+                    try {
+                        const url = new URL(scriptUrl);
+                        url.searchParams.append('action', 'resetClass');
+                        url.searchParams.append('classId', currentAdminClass);
+                        const res = await fetch(url.toString());
+                        const result = await res.json();
+                        if (result && result.data) {
+                            teams = result.data;
+                            localStorage.setItem('sgTriviaScores', JSON.stringify(teams));
+                            renderAdminTeams();
+                        }
+                    } catch (e) {
+                        console.error('Reset class error:', e);
+                    }
+                }
             }
         });
     }
