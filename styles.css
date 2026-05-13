@@ -33,7 +33,7 @@ body {
     width: 100vw;
     height: 100vh;
     z-index: -1;
-    background-image: linear-gradient(rgba(26, 11, 46, 0.2), rgba(45, 27, 78, 0.2)), url('file:///Users/beatricechen/.gemini/antigravity/brain/cfda6f29-4233-4eb0-bf19-f943cb3002ff/singapore_background_1778578362029.png');
+    background-image: linear-gradient(rgba(26, 11, 46, 0.2), rgba(45, 27, 78, 0.2)), url('singapore_background.png');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
