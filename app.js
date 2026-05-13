@@ -2,10 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize teams data
     const heClassCount = 9;
     const pingClassCount = 8;
-    
+
     // Load scores from localStorage or initialize
     let teams = JSON.parse(localStorage.getItem('sgTriviaScores')) || [];
-    
+
     // Cloud URL from env.js
     const scriptUrl = typeof window !== 'undefined' && window.ENV ? window.ENV.SCRIPT_URL : '';
 
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function saveScores() {
         localStorage.setItem('sgTriviaScores', JSON.stringify(teams));
-        
+
         // Sync to cloud
         if (scriptUrl) {
             try {
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
         function renderPublic() {
             podiumContainer.innerHTML = '';
             allTeamsGrid.innerHTML = '';
-            
+
             // Sort teams by score descending
             const sortedTeams = [...teams].sort((a, b) => b.score - a.score);
             const top4 = sortedTeams.filter(t => t.score > 0).slice(0, 4);
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="podium-rank">${item.icon}</div>
                         <div class="podium-name">${item.team.name}</div>
                     `;
-                    
+
                     const scoreEl = document.createElement('div');
                     scoreEl.className = 'podium-score';
                     scoreEl.style.marginTop = '0.5rem';
@@ -127,9 +127,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 allTeamsGrid.appendChild(card);
             });
         }
-        
+
         renderPublic();
-        
+
         // Listen to cloud updates initialized on load
         window.addEventListener('scoresUpdated', renderPublic);
 
