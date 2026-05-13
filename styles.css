@@ -35,8 +35,8 @@ body {
     z-index: -1;
     background-image: linear-gradient(rgba(26, 11, 46, 0.2), rgba(45, 27, 78, 0.2)), url('singapore_background.png');
     background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
+    background-position: center center;
+    background-repeat: no-repeat;
 }
 
 .container {
