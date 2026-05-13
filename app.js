@@ -243,3 +243,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+console.log(window.ENV.SCRIPT_URL);
+console.log(window.ENV.API_KEY);
