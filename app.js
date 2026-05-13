@@ -39,12 +39,14 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Sync to cloud
         if (scriptUrl) {
-            fetch(scriptUrl, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify(teams),
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-            }).catch(err => console.error('Sync error:', err));
+            try {
+                const url = new URL(scriptUrl);
+                url.searchParams.append('action', 'save');
+                url.searchParams.append('data', JSON.stringify(teams));
+                fetch(url.toString()).catch(err => console.error('Sync error:', err));
+            } catch (e) {
+                console.error('Invalid URL:', e);
+            }
         }
     }
 
